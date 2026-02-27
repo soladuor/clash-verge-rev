@@ -38,7 +38,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           ref: ${{ matrix.branch }} # 要同步的分支
-          token: ${{ secrets.GITHUB_TOKEN }} # GitHub 自动生成的临时令牌，无需手动创建
+          token: ${{ secrets.SYNC_TOKEN }}
 
       # 步骤2：调用现成的 Action 做同步
       - name: 同步上游仓库最新代码
@@ -46,6 +46,6 @@ jobs:
         with:
           # ↓↓↓ 下面 4 行请根据自身仓库/分支名修改 ↓↓↓
           target_sync_branch: ${{ matrix.branch }} # 本仓库要同步的分支
-          target_repo_token: ${{ secrets.GITHUB_TOKEN }}
+          target_repo_token: ${{ secrets.SYNC_TOKEN }}
           upstream_sync_branch: ${{ matrix.branch }} # 上游仓库的分支
           upstream_sync_repo: ${{ env.UPSTREAM_REPO }} # 上游仓库地址
