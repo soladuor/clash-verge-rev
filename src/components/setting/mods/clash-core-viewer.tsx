@@ -74,7 +74,6 @@ export function ClashCoreViewer({ ref }: { ref?: Ref<DialogRef> }) {
       invalidateClashConfig()
       mutateVersion()
     } catch (err) {
-      setChangingCore(null)
       showNotice.error(err)
     } finally {
       setChangingCore(null)
