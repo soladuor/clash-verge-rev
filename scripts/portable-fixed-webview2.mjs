@@ -73,12 +73,18 @@ async function resolvePortable() {
   const options = { owner: context.repo.owner, repo: context.repo.repo }
   const github = getOctokit(process.env.GITHUB_TOKEN)
   const tag = alpha ? 'alpha' : process.env.TAG_NAME || `v${version}`
-  console.log('[INFO]: upload to ', tag)
+  const releaseId = process.env.GITHUB_RELEASE_ID
 
-  const { data: release } = await github.rest.repos.getReleaseByTag({
-    ...options,
-    tag,
-  })
+  console.log('[INFO]: upload to ', releaseId ? `release id ${releaseId}` : tag)
+  const { data: release } = releaseId
+    ? await github.rest.repos.getRelease({
+        ...options,
+        release_id: Number(releaseId),
+      })
+    : await github.rest.repos.getReleaseByTag({
+        ...options,
+        tag,
+      })
 
   const assets = release.assets.filter((x) => {
     return x.name === zipFile
@@ -101,4 +107,7 @@ async function resolvePortable() {
   })
 }
 
-resolvePortable().catch(console.error)
+resolvePortable().catch((error) => {
+  console.error(error)
+  process.exitCode = 1
+})
